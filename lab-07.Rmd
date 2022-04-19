@@ -37,7 +37,7 @@ There were 3 warnings:
 ```{r}
 skim(uoe_art)
 ```
-artist missing = 111
+artist missing = 113
 year missing  1364
 
 ### Exercise 12 Make a histogram of years. Use a reasonable binwidth. Do you see anything out of the ordinary?
@@ -61,11 +61,38 @@ Death Mask. R got confused by the (2), which I'm guessing signifies it's the 2nd
 
 
 ```{r}
-uoe_art <- uoe_art %>%
-mutate(
-    year = if_else(year == "2", "1964", "paste0(year)")
-  )
-
+uoe_art_v2 <- uoe_art %>% 
+  mutate(
+    year = if_else(
+      year == "2" , "1964" ,
+      if_else(year != "2" , paste0(year), "NA"
+    ))) %>% 
+  mutate(year = as.numeric(year))
   
+```
+
+```{r}
+ggplot(uoe_art_v2,aes(x=year))+
+geom_histogram()+
+  coord_cartesian(xlim = c(1500 , 2022))
+```
+
+###Who is the most commonly featured artist in the collection? Do you know them? Any guess as to why the university has so many pieces from them?
+
+Emma Gillies. I am not familiar with her work. I'm guessing alumna? Or local artist?
+
+```{r}
+uoe_art_v2 %>% 
+  count(artist) %>% 
+  arrange(desc(n))
+```
+
+###Final question! How many art pieces have the word “child” in their title? See if you can figure it out, and ask for help if not.
+
+10, tried with "child" and no results
+
+```{r}
+uoe_art_edit %>% 
+  filter(str_detect(title , "Child"))
 ```
 
