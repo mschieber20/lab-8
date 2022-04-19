@@ -1,7 +1,7 @@
 ---
-title: "Lab 07 - University of Edinburgh Art Collection"
-author: "Insert your name here"
-date: "Insert date here"
+title: "Lab 08 - University of Edinburgh Art Collection"
+author: "Marq Schieber"
+date: "3/22/22"
 output: github_document
 ---
 
@@ -9,6 +9,7 @@ output: github_document
 
 ```{r load-packages, message = FALSE}
 library(tidyverse) 
+library(stringr)
 library(skimr)
 ```
 
@@ -17,24 +18,54 @@ library(skimr)
 uoe_art <- read_csv("data/uoe-art.csv")
 ```
 
-### Exercise 9
+### Exercise 10
 
 ```{r separate-title-date, error = TRUE}
 uoe_art <- uoe_art %>%
   separate(title, into = c("title", "date"), sep = "\\(") %>%
   mutate(year = str_remove(date, "\\)") %>% as.numeric()) %>%
-  select(title, artist, year, ___)
+  select(title, artist, year, date)
 ```
 
-### Exercise 10
+There were 3 warnings:
+1)Discarded pieces
+2)Discarded pieces replaced with NA
+3)Numeric-String computation error
 
-Remove this text, and add your answer for Exercise 10 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+### Exercise 11 Print out a summary of the dataframe using the skim() function. How many pieces have artist info missing? How many have year info missing?
 
-### Exercise 11
+```{r}
+skim(uoe_art)
+```
+artist missing = 111
+year missing  1364
 
-...
+### Exercise 12 Make a histogram of years. Use a reasonable binwidth. Do you see anything out of the ordinary?
 
-Add exercise headings as needed.
+```{r}
+ggplot(uoe_art,aes(x=year))+
+geom_histogram()
+```
+
+An art piece from year 0?....
+
+```{r}
+ggplot(uoe_art,aes(x=year))+
+geom_histogram()+
+  coord_cartesian(xlim = c(1500 , 2022))
+```
+
+### Exercise 13 Find which piece has the out of the ordinary year and go to its page on the art collection website to find the correct year for it. Can you tell why our code didn’t capture the correct year information? Correct the error in the data frame and visualize the data again.
+
+Death Mask. R got confused by the (2), which I'm guessing signifies it's the 2nd piece titled Death Mask.
+
+
+```{r}
+uoe_art <- uoe_art %>%
+mutate(
+    year = if_else(year == "2", "1964", "paste0(year)")
+  )
+
+  
+```
+
