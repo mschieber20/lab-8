@@ -38,3 +38,4 @@ scrape_page <- function(url){
     link = links
   )
 }
+
