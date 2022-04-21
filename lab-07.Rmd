@@ -13,7 +13,7 @@ library(stringr)
 library(skimr)
 ```
 
-```{r load-data, message = FALSE, eval = FALSE}
+```{r load-data, message = FALSE, eval = TRUE}
 # Remove eval = FALSE or set it to TRUE once data is ready to be loaded
 uoe_art <- read_csv("data/uoe-art.csv")
 ```
@@ -92,7 +92,7 @@ uoe_art_v2 %>%
 10, tried with "child" and no results
 
 ```{r}
-uoe_art_edit %>% 
+uoe_art_v2 %>% 
   filter(str_detect(title , "Child"))
 ```
 
